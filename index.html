@@ -1018,7 +1018,7 @@
 
         } else if (e.target.value === 'Inversion3' && informesInversionData) {
           Inversion3Layer = L.geoJSON(informesInversionData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => getField(f, "REGION") === regionSeleccionada,
             style: f => estiloInversion3(getField(f, "Inv_Ben3e"))
           }).addTo(map);
 
