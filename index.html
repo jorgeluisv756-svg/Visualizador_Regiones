@@ -305,7 +305,7 @@
 
       // Dibujar municipios de esa región (sin estilo temático aún)
       municipiosRegionLayer = L.geoJSON(municipiosData, {
-        filter: f => getField({properties:f.properties}, "REGION") === regionSeleccionada,
+        filter: f => getField({properties:f.properties}, "Regiones") === regionSeleccionada,
         style: { color: "#999", weight: 1, fillOpacity: 0.3 }
       }).addTo(map);
     });
