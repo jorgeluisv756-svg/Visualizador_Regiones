@@ -285,6 +285,7 @@
     // UI refs
     var legendDiv = document.getElementById('legend');
     var radios = document.getElementsByName('mapOption');
+    var listaMunicipiosDeRegion = [];
 
     document.getElementById('regionSelect').addEventListener('change', function(e) {
       regionSeleccionada = e.target.value;
@@ -300,14 +301,20 @@
         style: { color: "#000", weight: 3, fillOpacity: 0 }
       }).addTo(map);
 
+      map.fitBounds(regionLayer.getBounds());
+
       // Zoom a la región
       map.fitBounds(regionLayer.getBounds());
 
-      // Dibujar municipios de esa región (sin estilo temático aún)
-      municipiosRegionLayer = L.geoJSON(municipiosData, {
-        filter: f => getField({properties:f.properties}, "Regiones") === regionSeleccionada,
-        style: { color: "#999", weight: 1, fillOpacity: 0.3 }
-      }).addTo(map);
+
+      // Guardar lista de municipios de esa región
+      listaMunicipiosDeRegion = [];
+      L.geoJSON(municipiosData, {
+        filter: f => getField(f,"Regiones") === regionSeleccionada,
+        onEachFeature: function(feature) {
+        listaMunicipiosDeRegion.push(getField(feature,"NOMGEO"));
+        }
+      });
     });
 
     // Menú desplegable
@@ -610,7 +617,7 @@
         // Casos de programas
         if (e.target.value === 'exp1' && informesExpTransData) {
           exp1Layer = L.geoJSON(informesExpTransData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloexp1(getField(f, "ExpTra1eIn"))
           }).addTo(map);
 
@@ -634,7 +641,7 @@
 
         } else if (e.target.value === 'exp2' && informesExpTransData) {
           exp2Layer = L.geoJSON(informesExpTransData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloexp2(getField(f, "ExpTra2dIn"))
           }).addTo(map);
 
@@ -658,7 +665,7 @@
 
         } else if (e.target.value === 'exp1b' && informesExpTransData) {
           exp1bLayer = L.geoJSON(informesExpTransData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloexp1b(getField(f, "ExpTra1e"))
           }).addTo(map);
 
@@ -682,7 +689,7 @@
 
         } else if (e.target.value === 'exp2b' && informesExpTransData) {
           exp2bLayer = L.geoJSON(informesExpTransData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloexp2b(getField(f, "ExpTra2d"))
           }).addTo(map);
 
@@ -706,7 +713,7 @@
 
         } else if (e.target.value === 'juv1' && informesJuvData) {
           Juv1Layer = L.geoJSON(informesJuvData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloJuv1(getField(f, "InvTJuv1"))
           }).addTo(map);
 
@@ -730,7 +737,7 @@
 
         } else if (e.target.value === 'juv2' && informesJuvData) {
           Juv2Layer = L.geoJSON(informesJuvData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloJuv2(getField(f, "InvTJuv2"))
           }).addTo(map);
 
@@ -754,7 +761,7 @@
 
         } else if (e.target.value === 'juv1B' && informesJuvData) {
           Juv1BLayer = L.geoJSON(informesJuvData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloJuv1B(getField(f, "TransfJuv1"))
           }).addTo(map);
 
@@ -778,7 +785,7 @@
 
         } else if (e.target.value === 'juv2B' && informesJuvData) {
           Juv2BLayer = L.geoJSON(informesJuvData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloJuv2B(getField(f, "TransfJuv2"))
           }).addTo(map);
 
@@ -802,7 +809,7 @@
 
         } else if (e.target.value === 'NAFIN1' && informesNAFINData) {
           NAFIN1Layer = L.geoJSON(informesNAFINData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloNAFIN1(getField(f, "imp_1inv"))
           }).addTo(map);
 
@@ -826,7 +833,7 @@
 
         } else if (e.target.value === 'NAFIN2' && informesNAFINData) {
           NAFIN2Layer = L.geoJSON(informesNAFINData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloNAFIN2(getField(f, "imp_2inv"))
           }).addTo(map);
 
@@ -850,7 +857,7 @@
 
         } else if (e.target.value === 'NAFIN3' && informesNAFINData) {
           NAFIN3Layer = L.geoJSON(informesNAFINData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloNAFIN3(getField(f, "Imp_3_Actj"))
           }).addTo(map);
 
@@ -874,7 +881,7 @@
 
         } else if (e.target.value === 'HgoC1' && informesHgoCData) {
           HgoC1Layer = L.geoJSON(informesHgoCData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloHgoC1(getField(f, "HgoCon1eIn"))
           }).addTo(map);
 
@@ -898,7 +905,7 @@
 
         } else if (e.target.value === 'HgoC2' && informesHgoCData) {
           HgoC2Layer = L.geoJSON(informesHgoCData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloHgoC2(getField(f, "HgoCon2dIn"))
           }).addTo(map);
 
@@ -922,7 +929,7 @@
 
         } else if (e.target.value === 'Energia2' && informesEnergiaData) {
           Energia2Layer = L.geoJSON(informesEnergiaData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloEnergia2(getField(f, "EnergBi2In"))
           }).addTo(map);
 
@@ -946,7 +953,7 @@
 
         } else if (e.target.value === 'Energia2B' && informesEnergiaData) {
           Energia2BLayer = L.geoJSON(informesEnergiaData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloEnergia2B(getField(f, "EnergBien2"))
           }).addTo(map);
 
@@ -970,7 +977,7 @@
 
         } else if (e.target.value === 'Inversion1' && informesInversionData) {
           Inversion1Layer = L.geoJSON(informesInversionData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloInversion1(getField(f, "Inv_Ben1e"))
           }).addTo(map);
 
@@ -994,7 +1001,7 @@
 
         } else if (e.target.value === 'Inversion2' && informesInversionData) {
           Inversion2Layer = L.geoJSON(informesInversionData, {
-            filter: f => getField(f, "Regiones") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloInversion2(getField(f, "Inv_Ben2d"))
           }).addTo(map);
 
@@ -1018,7 +1025,7 @@
 
         } else if (e.target.value === 'Inversion3' && informesInversionData) {
           Inversion3Layer = L.geoJSON(informesInversionData, {
-            filter: f => getField(f, "REGION") === regionSeleccionada,
+            filter: f => listaMunicipiosDeRegion.includes(getField(f,"NOMGEO")),
             style: f => estiloInversion3(getField(f, "Inv_Ben3e"))
           }).addTo(map);
 
