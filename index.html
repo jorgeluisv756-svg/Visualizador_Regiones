@@ -291,6 +291,9 @@
       regionSeleccionada = e.target.value;
       if (!regionSeleccionada) return;
 
+      // Limpia cualquier programa que estuviera activo
+      limpiarInformes();
+
       // Limpiar capas anteriores
       if (regionLayer) map.removeLayer(regionLayer);
       if (municipiosRegionLayer) map.removeLayer(municipiosRegionLayer);
@@ -305,7 +308,6 @@
 
       // Zoom a la región
       map.fitBounds(regionLayer.getBounds());
-
 
       // Guardar lista de municipios de esa región
       listaMunicipiosDeRegion = [];
