@@ -287,19 +287,14 @@
     var radios = document.getElementsByName('mapOption');
     var listaMunicipiosDeRegion = [];
 
-     document.getElementById('regionSelect').addEventListener('change', function(e) {
+    document.getElementById('regionSelect').addEventListener('change', function(e) {
       regionSeleccionada = e.target.value;
       if (!regionSeleccionada) return;
 
-      // Limpia cualquier programa activo
-       limpiarInformes();
+      // Limpia cualquier programa que estuviera activo
+      limpiarInformes();
 
-      // Regresa al mapa base (estado completo)
-      municipiosLayer && municipiosLayer.bringToBack();
-      regionesLayer && regionesLayer.bringToFront();
-      edoLayer && edoLayer.bringToFront();
-
-      // Limpia capas anteriores de región
+      // Limpiar capas anteriores
       if (regionLayer) map.removeLayer(regionLayer);
       if (municipiosRegionLayer) map.removeLayer(municipiosRegionLayer);
 
@@ -309,15 +304,17 @@
         style: { color: "#000", weight: 3, fillOpacity: 0 }
       }).addTo(map);
 
+      map.fitBounds(regionLayer.getBounds());
+
       // Zoom a la región
       map.fitBounds(regionLayer.getBounds());
 
       // Guardar lista de municipios de esa región
       listaMunicipiosDeRegion = [];
       L.geoJSON(municipiosData, {
-        filter: f => getField(f,"REGION") === regionSeleccionada,
+        filter: f => getField(f,"Regiones") === regionSeleccionada,
         onEachFeature: function(feature) {
-          listaMunicipiosDeRegion.push(getField(feature,"NOMGEO"));
+        listaMunicipiosDeRegion.push(getField(feature,"NOMGEO"));
         }
       });
     });
