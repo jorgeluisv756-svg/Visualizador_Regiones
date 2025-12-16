@@ -294,6 +294,17 @@
       // Limpia cualquier programa que estuviera activo
       limpiarInformes();
 
+      // Desmarcar todos los radios del menú de programas
+      Array.from(document.getElementsByName('mapOption')).forEach(r => {
+        r.checked = false;
+        r.dataset.selected = "false";
+      });
+
+      // Regresa al mapa base 
+      municipiosLayer && municipiosLayer.bringToBack(); 
+      regionesLayer && regionesLayer.bringToFront(); 
+      edoLayer && edoLayer.bringToFront();
+
       // Limpiar capas anteriores
       if (regionLayer) map.removeLayer(regionLayer);
       if (municipiosRegionLayer) map.removeLayer(municipiosRegionLayer);
