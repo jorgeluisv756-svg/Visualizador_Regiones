@@ -80,25 +80,29 @@
 
     .empty-icon { background: none; border: none; }
 
-    #simbolos-panel {
-      position: absolute;
-      bottom: 10px; 
-      left: 10px;
-      z-index: 1000;
-      background: white;
-      padding: 10px;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      font-family: Arial, sans-serif;
-      font-size: 0.9em;
-      width: 90vw;
-      max-width: 220px;
-      display: none;
-    }
-    #simbolos-panel h3 { margin-top: 0; font-size: 14px; text-align: center; }
-    .simbolo { display: flex; align-items: center; margin-bottom: 6px; font-size: 14px; }
-    .simbolo .box { width: 20px; height: 20px; margin-right: 6px; background: none; border: 2px solid; }
-
+      #simbolos-panel {
+       position: absolute;
+       bottom: 10px;
+       left: 10px;
+       z-index: 1000;
+       background: white;
+       padding: 10px;
+       border-radius: 6px;
+       box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+       font-family: Arial, sans-serif;
+       font-size: 0.9em;
+       width: 90vw;
+       max-width: 300px; /* límite solicitado */
+       display: none;
+}
+     #simbolos-panel h3 { margin-top: 0; font-size: 14px; text-align: center; }
+     #simbolos-panel img {
+      width: 100%;
+      height: auto;
+      max-width: 300px;
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
     @media (max-width: 600px) {
       #logo img { width: 200px; }
       #panel { max-width: 90vw; font-size: 0.85em; }
@@ -174,9 +178,35 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
+
     // Inicializar mapa y capa base
     var map = L.map('map').setView([20.1, -98.7], 8);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    // Funciones para panel de imágenes
+    function mostrarSimboloImagen(url) {
+      var panel = document.getElementById('simbolos-panel');
+      var content = document.getElementById('simbolos-content');
+      content.innerHTML = "";
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = "Simbología";
+      content.appendChild(img);
+      panel.style.display = "block";
+    }
+
+    // Mapeo de programas -> imágenes
+    var simbolosPorOpcion = {
+      "exp1": "https://raw.githubusercontent.com/jorgeluisv756-svg/Visualizador_Regiones/87ce6e51dc9a1eda6d5659f51edb5f370100c7d9/TExt-R1-1.jpg",
+      // Agrega aquí las demás opciones con sus URLs
+    };
+
+    function ocultarSimboloImagen() {
+      var panel = document.getElementById('simbolos-panel');
+      var content = document.getElementById('simbolos-content');
+      content.innerHTML = "";
+      panel.style.display = "none";
+    }
 
     // Pane de etiquetas
     map.createPane('labels');
@@ -295,10 +325,13 @@
       limpiarInformes();
 
       // Desmarcar todos los radios del menú de programas
-      Array.from(document.getElementsByName('mapOption')).forEach(r => {
+     document.getElementById('regionSelect').addEventListener('change', function(e) {
+     var regionSeleccionada = e.target.value;
+     Array.from(document.getElementsByName('mapOption')).forEach(r => {
         r.checked = false;
-        r.dataset.selected = "false";
+       r.dataset.selected = "false";
       });
+      ocultarSimboloImagen();
 
       // Regresa al mapa base 
       municipiosLayer && municipiosLayer.bringToBack(); 
