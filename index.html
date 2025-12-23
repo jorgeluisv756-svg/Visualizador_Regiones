@@ -80,7 +80,7 @@
 
     .empty-icon { background: none; border: none; }
 
-    #simbolos-panel img {
+    #simbolos-panel {
       position: absolute;
       bottom: 10px; 
       left: 10px;
@@ -96,6 +96,8 @@
       display: none;
     }
     #simbolos-panel h3 { margin-top: 0; font-size: 14px; text-align: center; }
+    .simbolo { display: flex; align-items: center; margin-bottom: 6px; font-size: 14px; }
+    .simbolo .box { width: 20px; height: 20px; margin-right: 6px; background: none; border: 2px solid; }
 
     @media (max-width: 600px) {
       #logo img { width: 200px; }
@@ -163,8 +165,8 @@
     <label><input type="checkbox" id="toggleRegiones" checked> Regionales</label>
   </div>
 
-  <div id="simbolos-panel img">
-    <h3></h3>
+  <div id="simbolos-panel">
+    <h3>Simbología</h3>
     <div id="simbolos-content"></div>
   </div>
 
@@ -580,16 +582,21 @@
     }
 
     // Construcción de simbología dinámica (panel inferior izquierdo)
-    function mostrarSimboloImagen(url) {
+    function buildSimbolos(items) {
       var panel = document.getElementById('simbolos-panel');
       var content = document.getElementById('simbolos-content');
       content.innerHTML = "";
-
-      var img = document.createElement('img');
-      img.src = url;
-      img.alt = "Simbología";
-      content.appendChild(img);
-
+      items.forEach(s => {
+        var row = document.createElement('div');
+        row.className = "simbolo";
+        var box = document.createElement('span');
+        box.className = "box";
+        box.style.borderColor = s.borderColor || "#000";
+        box.style.background = s.fill || "none";
+        row.appendChild(box);
+        row.appendChild(document.createTextNode(s.label));
+        content.appendChild(row);
+      });
       panel.style.display = "block";
     }
 
@@ -639,7 +646,9 @@
             { color: "rgb(137,112,68)", label: "$240,001 - $1,122,000" }
           ], "INVERSIÓN");
           buildSimbolos([
-          mostrarSimboloImagen("https://raw.githubusercontent.com/jorgeluisv756-svg/Visualizador_Regiones/87ce6e51dc9a1eda6d5659f51edb5f370100c7d9/TExt-R1-1.jpg");
+            { borderColor: "#999", label: "Municipio" },
+            { borderColor: "#000", label: "Región" },
+            { borderColor: "rgb(255,0,0)", label: "Estado de Hidalgo" }
           ]);
 
         } else if (e.target.value === 'exp2' && informesExpTransData) {
