@@ -41,19 +41,10 @@
     #panel h3 { margin-top: 0; font-size: 14px; text-align: center; }
     #menuOptions { display: none; margin-top: 5px; }
 
-    #etiquetas-panel {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      z-index: 1000;
-      background: white;
-      padding: 10px;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      font-family: Arial, sans-serif;
-      font-size: 0.9em;
-      width: 90vw;
-      max-width: 180px;
+    #etiquetas-panel img {
+      width: 100%; 
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
     #etiquetas-panel h3 { margin-top: 0; font-size: 14px; text-align: center; }
 
@@ -582,23 +573,19 @@
     }
 
     // Construcción de simbología dinámica (panel inferior izquierdo)
-    function buildSimbolos(items) {
+    function mostrarSimboloImagen(url) {
       var panel = document.getElementById('simbolos-panel');
       var content = document.getElementById('simbolos-content');
       content.innerHTML = "";
-      items.forEach(s => {
-        var row = document.createElement('div');
-        row.className = "simbolo";
-        var box = document.createElement('span');
-        box.className = "box";
-        box.style.borderColor = s.borderColor || "#000";
-        box.style.background = s.fill || "none";
-        row.appendChild(box);
-        row.appendChild(document.createTextNode(s.label));
-        content.appendChild(row);
-      });
+
+      var img = document.createElement('img');
+      img.src = url;
+      img.alt = "Simbología";
+      content.appendChild(img);
+
       panel.style.display = "block";
     }
+
 
     // Handler con toggle (reseleccionar limpia y regresa a base)
     Array.from(radios).forEach(radio => {
@@ -645,10 +632,7 @@
             { color: "rgb(180,150,100)", label: "$126,001 - $240,000" },
             { color: "rgb(137,112,68)", label: "$240,001 - $1,122,000" }
           ], "INVERSIÓN");
-          buildSimbolos([
-            { borderColor: "#999", label: "Municipio" },
-            { borderColor: "#000", label: "Región" },
-            { borderColor: "rgb(255,0,0)", label: "Estado de Hidalgo" }
+          mostrarSimboloImagen("https://raw.githubusercontent.com/jorgeluisv756-svg/Visualizador_Regiones/87ce6e51dc9a1eda6d5659f51edb5f370100c7d9/TExt-R1-1.jpg");
           ]);
 
         } else if (e.target.value === 'exp2' && informesExpTransData) {
